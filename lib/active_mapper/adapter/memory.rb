@@ -1,3 +1,7 @@
+require 'active_mapper/adapter/memory/query'
+require 'active_mapper/adapter/memory/query_attribute'
+require 'active_mapper/adapter/memory/query_expression'
+
 module ActiveMapper
   module Adapter
     class Memory
@@ -11,8 +15,9 @@ module ActiveMapper
 
       def where(klass, options = {}, &block)
         attribute, direction = options[:order] || [:id, :asc]
+        query = Query.new(&block)
 
-        records = collection(klass).values.select(&block)
+        records = collection(klass).values.select(&query.to_proc)
         records = if direction == :desc
           records.sort { |x,y| [y.send(attribute), x.id] <=> [x.send(attribute), x.id] }
         else

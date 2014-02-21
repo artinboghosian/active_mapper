@@ -10,6 +10,22 @@ module ActiveMapper
           QueryExpression.new(@attribute, :in, collection)
         end
 
+        def not_in(*collection)
+          QueryExpression.new(@attribute, :not_in, collection)
+        end
+
+        def starts_with(value)
+          matches("#{value}%")
+        end
+
+        def contains(value)
+          matches("%#{value}%")
+        end
+
+        def ends_with(value)
+          matches("%#{value}")
+        end
+
         def ==(value)
           QueryExpression.new(@attribute, :eq, value)
         end
@@ -32,6 +48,12 @@ module ActiveMapper
 
         def <=(value)
           QueryExpression.new(@attribute, :lteq, value)
+        end
+
+        private
+
+        def matches(value)
+          QueryExpression.new(@attribute, :matches, value)
         end
       end
     end
