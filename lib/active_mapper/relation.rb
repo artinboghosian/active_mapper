@@ -8,9 +8,7 @@ module ActiveMapper
 
     def initialize_copy(other)
       super
-
       @all = nil
-      @count = nil
     end
 
     def all
