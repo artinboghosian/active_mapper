@@ -5,17 +5,6 @@ describe ActiveMapper::Adapter::Memory do
   let(:other_user) { User.new(name: 'other', age: 35) }
   let(:adapter) { ActiveMapper::Adapter::Memory.new }
 
-  # hack to get user equality working nicely. can't add this
-  # to the class or else ActiveMapper::Relation tests start
-  # to fail.
-  before(:all) do
-    class User; def ==(other); id && id == other.id end; end
-  end
-
-  after(:all) do
-    class User; def==(other); super end; end
-  end
-
   before do
     user.id = adapter.insert(User, user)
     other_user.id = adapter.insert(User, other_user)
@@ -23,9 +12,7 @@ describe ActiveMapper::Adapter::Memory do
 
   describe '#find' do
     it 'finds the record with the matching id' do
-      record = adapter.find(User, user.id)
-
-      expect(record.id).to eq(user.id)
+      expect(adapter.find(User, user.id)).to eq(user)
     end
   end
 
@@ -51,11 +38,10 @@ describe ActiveMapper::Adapter::Memory do
       expect(records.last).to eq(user)
     end
 
-    it 'limits the matching records' do
+    it 'limits the number of matching records' do
       records = adapter.where(User, limit: 1)
 
-      expect(records).to include(user)
-      expect(records).to_not include(other_user)
+      expect(records.count).to eq(1)
     end
 
     it 'offsets the matching records' do
@@ -67,7 +53,7 @@ describe ActiveMapper::Adapter::Memory do
   end
 
   describe '#count' do
-    it 'counts all the records' do
+    it 'counts the number of total records' do
       expect(adapter.count(User)).to eq(2)
     end
 
@@ -78,6 +64,7 @@ describe ActiveMapper::Adapter::Memory do
 
   describe '#insert' do
     it 'inserts the record into the collection' do
+      user = User.new(name: 'test', age: 18)
       id = adapter.insert(User, user)
       record = adapter.find(User, id)
 

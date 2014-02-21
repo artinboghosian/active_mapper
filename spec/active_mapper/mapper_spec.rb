@@ -9,7 +9,7 @@ describe ActiveMapper::Mapper do
 
   describe '#find' do
     it 'finds the object with the matching id' do
-      expect(adapter).to receive(:find).with(User, 1).and_return(user)
+      ActiveMapper::Relation.any_instance.should_receive(:all).and_return([user])
 
       expect(mapper.find(1)).to eq(user)
     end
