@@ -20,7 +20,7 @@ module ActiveMapper
     end
 
     def last
-      page(1).per_page(1).reverse_order.first
+      page(1).per_page(1).reverse_order.all.first
     end
 
     def count
