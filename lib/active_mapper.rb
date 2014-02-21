@@ -13,7 +13,7 @@ module ActiveMapper
   end
 
   def self.adapter
-    @adapter
+    @adapter ||= ActiveMapper::Adapter::Memory.new
   end
 
   def self.adapter=(adapter)

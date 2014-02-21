@@ -22,25 +22,16 @@ describe ActiveMapper do
   end
 
   describe '.adapter' do
-    context 'when adapter has been set' do
-      it 'returns the adapter' do
-        ActiveMapper.adapter = adapter
+    it 'returns the adapter that has been set' do
+      ActiveMapper.adapter = adapter
 
-        expect(ActiveMapper.adapter).to eq(adapter)
-      end
+      expect(ActiveMapper.adapter).to eq(adapter)
     end
 
-    context 'when adapter has not been set' do
-      pending 'defaults to the memory store' do
-        ActiveMapper.adapter = nil
+    it 'defaults to the memory store' do
+      ActiveMapper.adapter = nil
 
-        expect(ActiveMapper.adapter).to be_a(ActiveMapper::Adapter::Memory)
-      end
-      it 'returns the adapter' do
-        ActiveMapper.adapter = adapter
-
-        expect(ActiveMapper.adapter).to eq(adapter)
-      end
+      expect(ActiveMapper.adapter).to be_a(ActiveMapper::Adapter::Memory)
     end
   end
 end

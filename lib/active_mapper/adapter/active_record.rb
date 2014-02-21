@@ -42,8 +42,7 @@ module ActiveMapper
       end
 
       def update(klass, object)
-        record = find(klass, object.id)
-        record.update_attributes(serialize(klass, object))
+        find(klass, object.id).update_columns(serialize(klass, object))
       end
 
       def serialize(klass, object)
