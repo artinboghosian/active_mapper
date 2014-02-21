@@ -4,7 +4,7 @@ describe ActiveMapper::Relation do
   let(:adapter) { double('Adapter') }
   let(:user) { User.new }
   let(:query) { proc { |user| user.age > 18 } }
-  let(:relation) { ActiveMapper::Relation.new(User, adapter, limit: 10, &query) }
+  let(:relation) { ActiveMapper::Relation.new(User, adapter, &query) }
 
   before { adapter.stub(unserialize: user) }
 
@@ -54,7 +54,7 @@ describe ActiveMapper::Relation do
         expect(block).to eq(query)
       end.and_return([user])
 
-      relation.page(5).all
+      relation.per_page(10).page(5).all
     end
   end
 

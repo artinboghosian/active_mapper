@@ -1,14 +1,15 @@
 class ActiveMapper::Relation
-  def initialize(mapped_class, adapter, defaults = {}, &block)
+  def initialize(mapped_class, adapter, &block)
     @mapped_class = mapped_class
     @adapter = adapter
     @block = block
-    @page = 1
-    @limit = defaults[:limit] || 30
   end
 
   def initialize_copy(other)
-    super; @all = nil
+    super
+
+    @all = nil
+    @count = nil
   end
 
   def all
@@ -28,35 +29,33 @@ class ActiveMapper::Relation
   end
 
   def page(number)
-    @page = number; dup
+    @page = number
+    dup
   end
 
   def per_page(number)
-    @limit = number; dup
+    @limit = number
+    dup
   end
 
   def order_by(attribute)
-    @attribute = attribute; dup
+    @attribute = attribute
+    dup
   end
 
   def reverse_order
-    @direction = if @direction && @direction == :desc
-      :asc
-    else
-      :desc
-    end
-
+    @direction = @direction && @direction == :desc ? :asc : :desc
     dup
   end
 
   private
 
   def options
-    { offset: offset, limit: limit, order: order }
+    { offset: offset, limit: @limit, order: order }
   end
 
   def offset
-    (@page - 1) * limit
+    (@page - 1) * @limit if @page && @limit
   end
 
   def order
@@ -66,9 +65,5 @@ class ActiveMapper::Relation
     direction = @direction || :asc
 
     [attribute, direction]
-  end
-
-  def limit
-    @limit
   end
 end
