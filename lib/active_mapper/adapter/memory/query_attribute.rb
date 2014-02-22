@@ -11,7 +11,7 @@ module ActiveMapper
         end
 
         def not_in(*collection)
-          NegatedQueryExpression.new(self.in(*collection))
+          !(self.in(*collection))
         end
 
         def starts_with(value)

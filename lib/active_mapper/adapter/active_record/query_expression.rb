@@ -12,24 +12,48 @@ module ActiveMapper
           @attribute.send(@comparator, @value)
         end
 
+        def !
+          NotQueryExpression.new(self)
+        end
+
         def &(expression)
-          CompositeQueryExpression.new(self, :and, expression)
+          AndQueryExpression.new(self, expression)
         end
 
         def |(expression)
-          CompositeQueryExpression.new(self, :or, expression)
+          OrQueryExpression.new(self, expression)
         end
       end
 
-      class CompositeQueryExpression < QueryExpression
-        def initialize(left, comparator, right)
+      class NotQueryExpression < QueryExpression
+        def initialize(expression)
+          @expression = expression
+        end
+
+        def to_sql
+          @expression.to_sql.not
+        end
+      end
+
+      class AndQueryExpression < QueryExpression
+        def initialize(left, right)
           @left = left
-          @comparator = comparator
           @right = right
         end
 
         def to_sql
-          @left.to_sql.send(@comparator, @right.to_sql)
+          @left.to_sql.and(@right.to_sql)
+        end
+      end
+
+      class OrQueryExpression < QueryExpression
+        def initialize(left, right)
+          @left = left
+          @right = right
+        end
+
+        def to_sql
+          @left.to_sql.or(@right.to_sql)
         end
       end
     end

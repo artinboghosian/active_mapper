@@ -83,6 +83,7 @@ describe 'ActiveMapper with ActiveRecord adapter' do
     expect(mapper.first { |user| user.age >= 35 }).to eq(other_user)
     expect(mapper.first { |user| user.age < 35 }).to eq(user)
     expect(mapper.first { |user| user.age <= 28 }).to eq(user)
+    expect(mapper.first { |user| !(user.age == 28) }).to eq(other_user)
     expect(mapper.first { |user| (user.name == 'user') & (user.age > 18) }).to eq(user)
     expect(mapper.first { |user| (user.name == 'other') | (user.age == 35) }).to eq(other_user)
   end

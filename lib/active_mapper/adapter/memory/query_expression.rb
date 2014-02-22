@@ -14,12 +14,16 @@ module ActiveMapper
           end
         end
 
+        def !
+          NotQueryExpression.new(self)
+        end
+
         def &(expression)
-          CompositeQueryExpression.new(self, :&, expression)
+          AndQueryExpression.new(self, expression)
         end
 
         def |(expression)
-          CompositeQueryExpression.new(self, :|, expression)
+          OrQueryExpression.new(self, expression)
         end
       end
 
@@ -35,7 +39,7 @@ module ActiveMapper
         end
       end
 
-      class NegatedQueryExpression < QueryExpression
+      class NotQueryExpression < QueryExpression
         def initialize(expression)
           @expression = expression
         end
@@ -47,16 +51,28 @@ module ActiveMapper
         end
       end
 
-      class CompositeQueryExpression < QueryExpression
-        def initialize(left, comparator, right)
+      class AndQueryExpression < QueryExpression
+        def initialize(left, right)
           @left = left
-          @comparator = comparator
           @right = right
         end
 
         def to_proc
           proc do |object|
-            @left.to_proc.call(object).send(@comparator, @right.to_proc.call(object))
+            @left.to_proc.call(object) && @right.to_proc.call(object)
+          end
+        end
+      end
+
+      class OrQueryExpression < QueryExpression
+        def initialize(left, right)
+          @left = left
+          @right = right
+        end
+
+        def to_proc
+          proc do |object|
+            @left.to_proc.call(object) || @right.to_proc.call(object)
           end
         end
       end
