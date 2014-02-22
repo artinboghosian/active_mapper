@@ -78,13 +78,13 @@ describe ActiveMapper::Relation do
     end
   end
 
-  describe '#reverse_order' do
+  describe '#reverse' do
     it 'sets the opposite direction to order by' do
       expect(adapter).to receive(:where).with(User, hash_including(order: [:name, :desc])) do |&block|
         expect(block).to eq(query)
       end.and_return([user])
 
-      relation.order_by(:name).reverse_order.all
+      relation.order_by(:name).reverse.all
     end
   end
 end

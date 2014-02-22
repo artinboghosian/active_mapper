@@ -20,7 +20,7 @@ module ActiveMapper
     end
 
     def last
-      page(1).per_page(1).reverse_order.all.first
+      page(1).per_page(1).reverse.all.first
     end
 
     def count
@@ -39,10 +39,11 @@ module ActiveMapper
 
     def order_by(attribute)
       @attribute = attribute
+      @direction = :asc
       dup
     end
 
-    def reverse_order
+    def reverse
       @direction = @direction && @direction == :desc ? :asc : :desc
       dup
     end

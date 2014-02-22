@@ -13,11 +13,23 @@ module ActiveMapper
         end
 
         def &(expression)
-          QueryExpression.new(to_sql, :and, expression.to_sql)
+          CompositeQueryExpression.new(self, :and, expression)
         end
 
         def |(expression)
-          QueryExpression.new(to_sql, :or, expression.to_sql)
+          CompositeQueryExpression.new(self, :or, expression)
+        end
+      end
+
+      class CompositeQueryExpression < QueryExpression
+        def initialize(left, comparator, right)
+          @left = left
+          @comparator = comparator
+          @right = right
+        end
+
+        def to_sql
+          @left.to_sql.send(@comparator, @right.to_sql)
         end
       end
     end
