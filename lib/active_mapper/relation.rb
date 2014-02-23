@@ -27,6 +27,18 @@ module ActiveMapper
       @count ||= @adapter.count(@mapped_class, &@block)
     end
 
+    def any?
+      count > 0
+    end
+
+    def none?
+      !any?
+    end
+
+    def one?
+      count == 1
+    end
+
     def page(number)
       @page = number
       dup
@@ -37,7 +49,7 @@ module ActiveMapper
       dup
     end
 
-    def order_by(attribute)
+    def sort_by(attribute)
       @attribute = attribute
       @direction = :asc
       dup

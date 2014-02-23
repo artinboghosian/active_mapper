@@ -48,6 +48,47 @@ describe ActiveMapper::Relation do
     end
   end
 
+  describe '#any?' do
+    it 'is true when there are matching objects' do
+      expect(adapter).to receive(:count).with(User).and_return(1)
+      expect(relation.any?).to be_true
+    end
+
+    it 'is false when there are no matching objects' do
+      expect(adapter).to receive(:count).with(User).and_return(0)
+      expect(relation.any?).to be_false
+    end
+  end
+
+  describe '#none?' do
+    it 'is true when there are no matching objects' do
+      expect(adapter).to receive(:count).with(User).and_return(0)
+      expect(relation.none?).to be_true
+    end
+
+    it 'is false when there are matching objects' do
+      expect(adapter).to receive(:count).with(User).and_return(1)
+      expect(relation.none?).to be_false
+    end
+  end
+
+  describe '#one?' do
+    it 'is true when there is one matching object' do
+      expect(adapter).to receive(:count).with(User).and_return(1)
+      expect(relation.one?).to be_true
+    end
+
+    it 'is false when there are no matching objects' do
+      expect(adapter).to receive(:count).with(User).and_return(0)
+      expect(relation.one?).to be_false
+    end
+
+    it 'is false when there are is more than one matching object' do
+      expect(adapter).to receive(:count).with(User).and_return(2)
+      expect(relation.one?).to be_false
+    end
+  end
+
   describe '#page' do
     it 'sets the page number' do
       expect(adapter).to receive(:where).with(User, hash_including(offset: 40)) do |&block|
@@ -74,7 +115,7 @@ describe ActiveMapper::Relation do
         expect(block).to eq(query)
       end.and_return([user])
 
-      relation.order_by(:name).all
+      relation.sort_by(:name).all
     end
   end
 
@@ -84,7 +125,7 @@ describe ActiveMapper::Relation do
         expect(block).to eq(query)
       end.and_return([user])
 
-      relation.order_by(:name).reverse.all
+      relation.sort_by(:name).reverse.all
     end
   end
 end
