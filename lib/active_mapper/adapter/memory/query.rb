@@ -1,3 +1,6 @@
+require 'active_mapper/adapter/memory/query/attribute'
+require 'active_mapper/adapter/memory/query/expression'
+
 module ActiveMapper
   module Adapter
     class Memory
@@ -11,7 +14,7 @@ module ActiveMapper
         end
 
         def method_missing(name, *args, &block)
-          QueryAttribute.new(name)
+          Attribute.new(name)
         end
       end
     end

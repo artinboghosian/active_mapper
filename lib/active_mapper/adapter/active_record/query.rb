@@ -1,3 +1,6 @@
+require 'active_mapper/adapter/active_record/query/attribute'
+require 'active_mapper/adapter/active_record/query/expression'
+
 module ActiveMapper
   module Adapter
     class ActiveRecord
@@ -12,7 +15,7 @@ module ActiveMapper
         end
 
         def method_missing(name, *args, &block)
-          QueryAttribute.new(@table[name])
+          Attribute.new(@table[name])
         end
       end
     end

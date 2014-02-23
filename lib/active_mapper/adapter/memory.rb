@@ -1,6 +1,4 @@
 require 'active_mapper/adapter/memory/query'
-require 'active_mapper/adapter/memory/query_attribute'
-require 'active_mapper/adapter/memory/query_expression'
 
 module ActiveMapper
   module Adapter

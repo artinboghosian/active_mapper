@@ -1,7 +1,5 @@
 require 'active_record'
 require 'active_mapper/adapter/active_record/query'
-require 'active_mapper/adapter/active_record/query_attribute'
-require 'active_mapper/adapter/active_record/query_expression'
 
 module ActiveMapper
   module Adapter

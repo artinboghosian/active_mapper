@@ -1,13 +1,13 @@
 module ActiveMapper
   module Adapter
     class Memory
-      class QueryAttribute
+      class Attribute
         def initialize(attribute)
           @attribute = attribute
         end
 
         def in(*collection)
-          InvertedQueryExpression.new(collection, :include?, @attribute)
+          InvertedExpression.new(collection, :include?, @attribute)
         end
 
         def not_in(*collection)
@@ -27,33 +27,33 @@ module ActiveMapper
         end
 
         def ==(value)
-          QueryExpression.new(@attribute, :==, value)
+          Expression.new(@attribute, :==, value)
         end
 
         def !=(value)
-          QueryExpression.new(@attribute, :!=, value)
+          Expression.new(@attribute, :!=, value)
         end
 
         def >(value)
-          QueryExpression.new(@attribute, :>, value)
+          Expression.new(@attribute, :>, value)
         end
 
         def >=(value)
-          QueryExpression.new(@attribute, :>=, value)
+          Expression.new(@attribute, :>=, value)
         end
 
         def <(value)
-          QueryExpression.new(@attribute, :<, value)
+          Expression.new(@attribute, :<, value)
         end
 
         def <=(value)
-          QueryExpression.new(@attribute, :<=, value)
+          Expression.new(@attribute, :<=, value)
         end
 
         private
 
         def matches(regexp)
-          QueryExpression.new(@attribute, :match, regexp)
+          Expression.new(@attribute, :match, regexp)
         end
       end
     end

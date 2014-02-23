@@ -1,7 +1,7 @@
 module ActiveMapper
   module Adapter
     class Memory
-      class QueryExpression
+      class Expression
         def initialize(attribute, comparator, value)
           @attribute = attribute
           @comparator = comparator
@@ -15,19 +15,19 @@ module ActiveMapper
         end
 
         def !
-          NotQueryExpression.new(self)
+          NotExpression.new(self)
         end
 
         def &(expression)
-          AndQueryExpression.new(self, expression)
+          AndExpression.new(self, expression)
         end
 
         def |(expression)
-          OrQueryExpression.new(self, expression)
+          OrExpression.new(self, expression)
         end
       end
 
-      class InvertedQueryExpression < QueryExpression
+      class InvertedExpression < Expression
         def initialize(value, comparator, attribute)
           super(attribute, comparator, value)
         end
@@ -39,7 +39,7 @@ module ActiveMapper
         end
       end
 
-      class NotQueryExpression < QueryExpression
+      class NotExpression < Expression
         def initialize(expression)
           @expression = expression
         end
@@ -51,7 +51,7 @@ module ActiveMapper
         end
       end
 
-      class AndQueryExpression < QueryExpression
+      class AndExpression < Expression
         def initialize(left, right)
           @left = left
           @right = right
@@ -64,7 +64,7 @@ module ActiveMapper
         end
       end
 
-      class OrQueryExpression < QueryExpression
+      class OrExpression < Expression
         def initialize(left, right)
           @left = left
           @right = right
