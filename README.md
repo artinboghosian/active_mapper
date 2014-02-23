@@ -1,6 +1,6 @@
 # ActiveMapper
 
-TODO: Write a gem description
+ActiveMapper is a implementation of DataMapper pattern using ActiveRecord/Arel as a backend. It allows you to create models using plain old ruby objects so that you can substitute the Memory adapter in tests (which will make them super fast). It assumes that your models have an id field and respond to valid? and .model_name. These can easily be injected into your models by including ActiveModel::Model. It was heavily influenced by the Perpetuity gem (which I love).
 
 ## Installation
 
@@ -18,7 +18,24 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+    class Post
+        include ActiveModel::Model
+        
+        attr_accessor :id, :title, :content, :created_at, :updated_at
+        
+        def persisted?
+            id
+        end
+    end
+    
+    ActiveMapper.generate(Post)
+    
+    post = Post.new(title: 'Post', content: 'My First Post')
+    ActiveMapper[Post].save(post)
+    
+    record = ActiveMapper[Post].find(post.id)
+
+Simply create a plain old ruby model (e.g. Post) that includes ActiveModel::Model. Add attr_accessor (must have :id). Then register an adapter using ActiveMapper.generate(Post). Make sure to set the adapter you want to use (default is ActiveMapper::Adapter::Memory). Set the adapter by calling ActiveMapper.adapter = ActiveMapper::Adapter::ActiveRecord.new. Then access the mapper using ActiveMapper[Post]. Please contribute to the project by forking it if you feel this project has any value or you are just interested in it.
 
 ## Contributing
 
