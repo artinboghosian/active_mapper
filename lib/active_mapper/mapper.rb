@@ -7,28 +7,46 @@ module ActiveMapper
       @adapter = adapter
     end
 
-    def find(id)
-      first { |object| object.id == id }
+    def any?(&block)
+      select(&block).any?
     end
 
-    def all(&block)
-      where(&block).all
+    def none?(&block)
+      select(&block).none?
     end
 
-    def first(&block)
-      where(&block).first
-    end
-
-    def last(&block)
-      where(&block).last
+    def one?(&block)
+      select(&block).one?
     end
 
     def count(&block)
-      where(&block).count
+      select(&block).count
     end
 
-    def where(&block)
+    def find(&block)
+      select(&block).first
+    end
+    alias :detect :find
+    alias :first :find
+
+    def find_all(&block)
+      select(&block).to_a
+    end
+
+    def find_by_id(id)
+      find { |object| object.id == id }
+    end
+
+    def last(&block)
+      select(&block).last
+    end
+
+    def select(&block)
       Relation.new(mapped_class, adapter, &block)
+    end
+
+    def reject(&block)
+      select { |object| !block.call(object) }
     end
 
     def save(object)
@@ -47,8 +65,17 @@ module ActiveMapper
       adapter.delete(mapped_class, object)
     end
 
-    def delete_all(&block)
+    def delete_if(&block)
       adapter.delete_all(mapped_class, &block)
+    end
+
+    def clear
+      adapter.delete_all(mapped_class)
+    end
+    alias :delete_all :clear
+
+    def keep_if(&block)
+      delete_if { |object| !block.call(object) }
     end
 
     def ==(other)

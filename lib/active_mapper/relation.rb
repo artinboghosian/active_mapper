@@ -8,23 +8,11 @@ module ActiveMapper
 
     def initialize_copy(other)
       super
-      @all = nil
+      @to_a = nil
     end
 
-    def all
-      @all ||= @adapter.where(@mapped_class, options, &@block).map { |record| @adapter.unserialize(@mapped_class, record) }
-    end
-
-    def first
-      page(1).per_page(1).all.first
-    end
-
-    def last
-      page(1).per_page(1).reverse.all.first
-    end
-
-    def count
-      @count ||= @adapter.count(@mapped_class, &@block)
+    def all?
+      @adapter.count(@mapped_class) == count
     end
 
     def any?
@@ -34,49 +22,80 @@ module ActiveMapper
     def none?
       !any?
     end
+    alias :empty? :none?
 
     def one?
       count == 1
     end
 
-    def page(number)
-      @page = number
+    def count
+      @count ||= @adapter.count(@mapped_class, &@block)
+    end
+    alias :length :count
+    alias :size :count
+
+    def drop(number)
+      @offset = number
       dup
     end
 
-    def per_page(number)
+    def take(number)
       @limit = number
       dup
     end
 
-    def sort_by(attribute)
+    def first(number = 1)
+      objects = drop(0).take(number).to_a
+
+      if number == 1
+        objects.first
+      else
+        objects
+      end
+    end
+
+    def last(number = 1)
+      objects = drop(0).take(number).reverse.to_a
+
+      if number == 1
+        objects.first
+      else
+        objects
+      end
+    end
+
+    def sort(attribute)
       @attribute = attribute
       @direction = :asc
       dup
     end
+    alias :sort_by :sort
 
     def reverse
       @direction = @direction && @direction == :desc ? :asc : :desc
       dup
     end
 
+    def to_a
+      @to_a||= @adapter.where(@mapped_class, options, &@block).map { |record| @adapter.unserialize(@mapped_class, record) }
+    end
+
+    def map(&block)
+      to_a.map(&block)
+    end
+
+    def each(&block)
+      to_a.each(&block)
+    end
+
     private
 
     def options
-      { offset: offset, limit: @limit, order: order }
-    end
-
-    def offset
-      (@page - 1) * @limit if @page && @limit
+      { offset: @offset, limit: @limit, order: order }
     end
 
     def order
-      return unless @attribute || @direction
-
-      attribute = @attribute || :id
-      direction = @direction || :asc
-
-      [attribute, direction]
+      [@attribute || :id, @direction || :asc] if @attribute || @direction
     end
   end
 end

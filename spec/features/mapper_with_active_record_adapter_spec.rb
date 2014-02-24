@@ -8,7 +8,7 @@ describe 'ActiveMapper with ActiveRecord adapter' do
 
   setup_active_record('active_record_integration')
 
-  after { mapper.delete_all }
+  after { mapper.clear }
 
   it 'can create and modify records' do
     mapper.save(user)
@@ -16,7 +16,7 @@ describe 'ActiveMapper with ActiveRecord adapter' do
     user.age = 18
     mapper.save(user)
 
-    record = mapper.find(user.id)
+    record = mapper.find_by_id(user.id)
 
     expect(record.name).to eq('Changed')
     expect(record.age).to eq(18)
@@ -26,13 +26,13 @@ describe 'ActiveMapper with ActiveRecord adapter' do
     mapper.save(user)
     mapper.delete(user)
 
-    expect(mapper.find(user.id)).to be_nil
+    expect(mapper.find_by_id(user.id)).to be_nil
 
     user.id = nil
 
     mapper.save(user)
     mapper.save(other_user)
-    mapper.delete_all
+    mapper.clear
 
     expect(mapper.count).to eq(0)
 
@@ -41,10 +41,20 @@ describe 'ActiveMapper with ActiveRecord adapter' do
 
     mapper.save(user)
     mapper.save(other_user)
-    mapper.delete_all { |user| user.age < 35 }
+    mapper.delete_if { |user| user.age < 35 }
 
-    expect(mapper.find(other_user.id)).to eq(other_user)
-    expect(mapper.find(user.id)).to be_nil
+    expect(mapper.find_by_id(other_user.id)).to eq(other_user)
+    expect(mapper.find_by_id(user.id)).to be_nil
+
+    user.id = nil
+    other_user.id = nil
+
+    mapper.save(user)
+    mapper.save(other_user)
+    mapper.keep_if { |user| user.age < 35 }
+
+    expect(mapper.find_by_id(user.id)).to eq(user)
+    expect(mapper.find_by_id(other_user.id)).to be_nil
   end
 
   it 'can retrieve the first, last and all records' do
@@ -54,7 +64,7 @@ describe 'ActiveMapper with ActiveRecord adapter' do
     expect(mapper.first).to eq(user)
     expect(mapper.last).to eq(other_user)
 
-    records = mapper.all
+    records = mapper.find_all
 
     expect(records).to include(user)
     expect(records).to include(other_user)
@@ -72,6 +82,7 @@ describe 'ActiveMapper with ActiveRecord adapter' do
     mapper.save(user)
     mapper.save(other_user)
 
+    expect(mapper.reject { |user| user.name == 'user' }.to_a).to eq([other_user])
     expect(mapper.first { |user| user.name.in 'user' }).to eq(user)
     expect(mapper.first { |user| user.name.not_in 'user' }).to eq(other_user)
     expect(mapper.first { |user| user.name.starts_with 'us' }).to eq(user)
