@@ -32,12 +32,19 @@ module ActiveMapper
         where(klass, &block).count
       end
 
-      def min(klass, attribute, &block)
+      def minimum(klass, attribute, &block)
         where(klass, order: [attribute, :asc], &block).first.send(attribute)
       end
 
-      def max(klass, attribute, &block)
+      def maximum(klass, attribute, &block)
         where(klass, order: [attribute, :desc], &block).first.send(attribute)
+      end
+
+      def average(klass, attribute, &block)
+        values = where(klass, &block).map(&:"#{attribute}")
+        total = values.reduce(:+).to_f
+
+        total / values.size
       end
 
       def insert(klass, object)

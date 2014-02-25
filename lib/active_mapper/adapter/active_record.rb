@@ -30,12 +30,16 @@ module ActiveMapper
         where(klass, &block).count
       end
 
-      def min(klass, attribute, &block)
+      def minimum(klass, attribute, &block)
         where(klass, &block).minimum(attribute)
       end
 
-      def max(klass, attribute, &block)
+      def maximum(klass, attribute, &block)
         where(klass, &block).maximum(attribute)
+      end
+
+      def average(klass, attribute, &block)
+        where(klass, &block).average(attribute)
       end
 
       def insert(klass, object)

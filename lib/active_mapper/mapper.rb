@@ -28,19 +28,26 @@ module ActiveMapper
     end
 
     def min(attribute)
-      select.min(attribute)
+      find_all.min(attribute)
     end
     alias :min_by :min
+    alias :minimum :min
 
     def max(attribute)
-      select.max(attribute)
+      find_all.max(attribute)
     end
     alias :max_by :max
+    alias :maximum :max
 
     def minmax(attribute)
-      select.minmax(attribute)
+      find_all.minmax(attribute)
     end
     alias :minmax_by :minmax
+
+    def avg(attribute)
+      find_all.avg(attribute)
+    end
+    alias :average :avg
 
     def find(id = nil, &block)
       id ? first { |object| object.id == id } : first(&block)

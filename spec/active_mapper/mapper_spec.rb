@@ -68,23 +68,30 @@ describe ActiveMapper::Mapper do
 
   describe '#min' do
     it 'finds the minimum value' do
-      expect(adapter).to receive(:min).with(User, :age).and_return(28)
+      expect(adapter).to receive(:minimum).with(User, :age).and_return(28)
       expect(mapper.min(:age)).to eq(28)
     end
   end
 
   describe '#max' do
     it 'finds the maximum value' do
-      expect(adapter).to receive(:max).with(User, :age).and_return(35)
+      expect(adapter).to receive(:maximum).with(User, :age).and_return(35)
       expect(mapper.max(:age)).to eq(35)  
     end
   end
 
   describe '#minmax' do
     it 'finds the minium and maximum values' do
-      expect(adapter).to receive(:min).with(User, :age).and_return(28)
-      expect(adapter).to receive(:max).with(User, :age).and_return(35)
+      expect(adapter).to receive(:minimum).with(User, :age).and_return(28)
+      expect(adapter).to receive(:maximum).with(User, :age).and_return(35)
       expect(mapper.minmax(:age)).to eq([28, 35])
+    end
+  end
+
+  describe '#average' do
+    it 'finds the average value' do
+      expect(adapter).to receive(:average).with(User, :age).and_return(31.5)
+      expect(mapper.avg(:age)).to eq(31.5)
     end
   end
 

@@ -65,7 +65,7 @@ describe ActiveMapper::Relation do
 
   describe '#min' do
     it 'calculates the minimum value' do
-      expect(adapter).to receive(:min).with(User, :age) do |&block|
+      expect(adapter).to receive(:minimum).with(User, :age) do |&block|
         expect(block).to eq(query)
       end.and_return(28)
 
@@ -75,7 +75,7 @@ describe ActiveMapper::Relation do
 
   describe '#max' do
     it 'calculates the maximum value' do
-      expect(adapter).to receive(:max).with(User, :age) do |&block|
+      expect(adapter).to receive(:maximum).with(User, :age) do |&block|
         expect(block).to eq(query)
       end.and_return(35)
 
@@ -85,15 +85,25 @@ describe ActiveMapper::Relation do
 
   describe '#minmax' do
     it 'calculates the minimum and maximum values' do
-      expect(adapter).to receive(:min).with(User, :age) do |&block|
+      expect(adapter).to receive(:minimum).with(User, :age) do |&block|
         expect(block).to eq(query)
       end.and_return(28)
 
-      expect(adapter).to receive(:max).with(User, :age) do |&block|
+      expect(adapter).to receive(:maximum).with(User, :age) do |&block|
         expect(block).to eq(query)
       end.and_return(35)
 
       expect(relation.minmax(:age)).to eq([28, 35])
+    end
+  end
+
+  describe '#avg' do
+    it 'calculates the average value' do
+      expect(adapter).to receive(:average).with(User, :age) do |&block|
+        expect(block).to eq(query)
+      end.and_return(31.5)
+
+      expect(relation.avg(:age)).to eq(31.5)
     end
   end
 

@@ -37,16 +37,23 @@ module ActiveMapper
     alias :size :count
 
     def min(attribute)
-      @min ||= @adapter.min(@mapped_class, attribute, &@block)
+      @min ||= @adapter.minimum(@mapped_class, attribute, &@block)
     end
+    alias :minimum :min
 
     def max(attribute)
-      @max ||= @adapter.max(@mapped_class, attribute, &@block)
+      @max ||= @adapter.maximum(@mapped_class, attribute, &@block)
     end
+    alias :maximum :max
 
     def minmax(attribute)
       [min(attribute), max(attribute)]
     end
+
+    def avg(attribute)
+      @avg ||= @adapter.average(@mapped_class, attribute, &@block)
+    end
+    alias :average :avg
 
     def drop(number)
       @offset = number

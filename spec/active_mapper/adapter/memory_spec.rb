@@ -62,23 +62,33 @@ describe ActiveMapper::Adapter::Memory do
     end
   end
 
-  describe '#min' do
+  describe '#minimum' do
     it 'calculates the minimum value' do
-      expect(adapter.min(User, :age)).to eq(28)
+      expect(adapter.minimum(User, :age)).to eq(28)
     end
 
-    it 'calculates the minimum value on a subset of records' do
-      expect(adapter.min(User, :age) { |user| user.age > 30 }).to eq(35)
+    it 'calculates the minimum value of a subset of records' do
+      expect(adapter.minimum(User, :age) { |user| user.age > 30 }).to eq(35)
     end
   end
 
-  describe '#max' do
+  describe '#maximum' do
     it 'calculates the maximum value' do
-      expect(adapter.max(User, :age)).to eq(35)
+      expect(adapter.maximum(User, :age)).to eq(35)
     end
 
-    it 'calculates the maximum value on a subset of records' do
-      expect(adapter.max(User, :age) { |user| user.age < 30 }).to eq(28)
+    it 'calculates the maximum value of a subset of records' do
+      expect(adapter.maximum(User, :age) { |user| user.age < 30 }).to eq(28)
+    end
+  end
+
+  describe '#average' do
+    it 'calculates the average value' do
+      expect(adapter.average(User, :age)).to eq(31.5)
+    end
+
+    it 'calculates the average value of a subset of records' do
+      expect(adapter.average(User, :age) { |user| user.age < 35 }).to eq(28)
     end
   end
 

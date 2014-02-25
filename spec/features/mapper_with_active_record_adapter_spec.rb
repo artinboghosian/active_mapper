@@ -106,5 +106,6 @@ describe 'ActiveMapper with ActiveRecord adapter' do
     expect(mapper.max(:age)).to eq(35)
     expect(mapper.min(:age)).to eq(28)
     expect(mapper.minmax(:age)).to eq([28, 35])
+    expect(mapper.avg(:age)).to eq(31.5)
   end
 end
