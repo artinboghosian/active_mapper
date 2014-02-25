@@ -57,10 +57,6 @@ module ActiveMapper
       id ? first { |object| object.id == id } : first(&block)
     end
 
-    def find_all(&block)
-      select(&block)
-    end
-
     def first(&block)
       select(&block).first
     end
@@ -73,6 +69,7 @@ module ActiveMapper
     def select(&block)
       Relation.new(mapped_class, adapter, &block)
     end
+    alias :find_all :select
 
     def reject(&block)
       select { |object| !block.call(object) }
