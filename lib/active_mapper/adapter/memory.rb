@@ -41,10 +41,11 @@ module ActiveMapper
       end
 
       def average(klass, attribute, &block)
-        values = where(klass, &block).map(&:"#{attribute}")
-        total = values.reduce(:+).to_f
+        sum(klass, attribute, &block).to_f / count(klass, &block)
+      end
 
-        total / values.size
+      def sum(klass, attribute, &block)
+        where(klass, &block).sum(&:"#{attribute}")
       end
 
       def insert(klass, object)

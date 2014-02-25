@@ -49,6 +49,10 @@ module ActiveMapper
     end
     alias :average :avg
 
+    def sum(attribute)
+      find_all.sum(attribute)
+    end
+
     def find(id = nil, &block)
       id ? first { |object| object.id == id } : first(&block)
     end

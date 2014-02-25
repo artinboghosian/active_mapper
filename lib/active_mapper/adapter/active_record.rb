@@ -31,15 +31,19 @@ module ActiveMapper
       end
 
       def minimum(klass, attribute, &block)
-        where(klass, &block).minimum(attribute)
+        calculate(klass, attribute, :minimum, &block)
       end
 
       def maximum(klass, attribute, &block)
-        where(klass, &block).maximum(attribute)
+        calculate(klass, attribute, :maximum, &block)
       end
 
       def average(klass, attribute, &block)
-        where(klass, &block).average(attribute)
+        calculate(klass, attribute, :average, &block)
+      end
+
+      def sum(klass, attribute, &block)
+        calculate(klass, attribute, :sum, &block)
       end
 
       def insert(klass, object)
@@ -83,6 +87,10 @@ module ActiveMapper
           active_record.table_name = klass.model_name.plural
           active_record
         end
+      end
+      
+      def calculate(klass, attribute, method, &block)
+        where(klass, &block).send(method, attribute)
       end
     end
   end

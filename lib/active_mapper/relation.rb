@@ -55,6 +55,10 @@ module ActiveMapper
     end
     alias :average :avg
 
+    def sum(attribute)
+      @sum ||= @adapter.sum(@mapped_class, attribute, &@block)
+    end
+
     def drop(number)
       @offset = number
       dup

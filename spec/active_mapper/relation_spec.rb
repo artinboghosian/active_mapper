@@ -107,6 +107,16 @@ describe ActiveMapper::Relation do
     end
   end
 
+  describe '#sum' do
+    it 'calculates the total value' do
+      expect(adapter).to receive(:sum).with(User, :age) do |&block|
+        expect(block).to eq(query)
+      end.and_return(63)
+
+      expect(relation.sum(:age)).to eq(63)
+    end
+  end
+
   describe '#drop' do
     it 'offsets by the number of objects' do
       expect(adapter).to receive(:where).with(User, hash_including(offset: 10)).and_return([user])

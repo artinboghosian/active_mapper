@@ -92,6 +92,16 @@ describe ActiveMapper::Adapter::Memory do
     end
   end
 
+  describe '#sum' do
+    it 'calculates the total value' do
+      expect(adapter.sum(User, :age)).to eq(63)
+    end
+
+    it 'calculates the total value of a subset of records' do
+      expect(adapter.sum(User, :age) { |user| user.age < 35 }).to eq(28)
+    end
+  end
+
   describe '#insert' do
     it 'inserts the record into the collection' do
       user = User.new(name: 'test', age: 18)
