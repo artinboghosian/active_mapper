@@ -27,6 +27,21 @@ module ActiveMapper
       select(&block).count
     end
 
+    def min(attribute)
+      select.min(attribute)
+    end
+    alias :min_by :min
+
+    def max(attribute)
+      select.max(attribute)
+    end
+    alias :max_by :max
+
+    def minmax(attribute)
+      select.minmax(attribute)
+    end
+    alias :minmax_by :minmax
+
     def find(id = nil, &block)
       id ? first { |object| object.id == id } : first(&block)
     end

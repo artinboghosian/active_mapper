@@ -32,6 +32,14 @@ module ActiveMapper
         where(klass, &block).count
       end
 
+      def min(klass, attribute, &block)
+        where(klass, order: [attribute, :asc], &block).first.send(attribute)
+      end
+
+      def max(klass, attribute, &block)
+        where(klass, order: [attribute, :desc], &block).first.send(attribute)
+      end
+
       def insert(klass, object)
         object = object.dup
         object.id = (collection(klass).keys.last || 0) + 1

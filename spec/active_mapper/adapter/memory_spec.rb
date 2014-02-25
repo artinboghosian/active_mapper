@@ -62,6 +62,26 @@ describe ActiveMapper::Adapter::Memory do
     end
   end
 
+  describe '#min' do
+    it 'calculates the minimum value' do
+      expect(adapter.min(User, :age)).to eq(28)
+    end
+
+    it 'calculates the minimum value on a subset of records' do
+      expect(adapter.min(User, :age) { |user| user.age > 30 }).to eq(35)
+    end
+  end
+
+  describe '#max' do
+    it 'calculates the maximum value' do
+      expect(adapter.max(User, :age)).to eq(35)
+    end
+
+    it 'calculates the maximum value on a subset of records' do
+      expect(adapter.max(User, :age) { |user| user.age < 30 }).to eq(28)
+    end
+  end
+
   describe '#insert' do
     it 'inserts the record into the collection' do
       user = User.new(name: 'test', age: 18)

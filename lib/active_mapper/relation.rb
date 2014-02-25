@@ -36,6 +36,18 @@ module ActiveMapper
     alias :length :count
     alias :size :count
 
+    def min(attribute)
+      @min ||= @adapter.min(@mapped_class, attribute, &@block)
+    end
+
+    def max(attribute)
+      @max ||= @adapter.max(@mapped_class, attribute, &@block)
+    end
+
+    def minmax(attribute)
+      [min(attribute), max(attribute)]
+    end
+
     def drop(number)
       @offset = number
       dup

@@ -98,4 +98,13 @@ describe 'ActiveMapper with ActiveRecord adapter' do
     expect(mapper.first { |user| (user.name == 'user') & (user.age > 18) }).to eq(user)
     expect(mapper.first { |user| (user.name == 'other') | (user.age == 35) }).to eq(other_user)
   end
+
+  it 'can aggregate data' do
+    mapper.save(user)
+    mapper.save(other_user)
+
+    expect(mapper.max(:age)).to eq(35)
+    expect(mapper.min(:age)).to eq(28)
+    expect(mapper.minmax(:age)).to eq([28, 35])
+  end
 end

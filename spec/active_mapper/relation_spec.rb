@@ -63,6 +63,40 @@ describe ActiveMapper::Relation do
     end
   end
 
+  describe '#min' do
+    it 'calculates the minimum value' do
+      expect(adapter).to receive(:min).with(User, :age) do |&block|
+        expect(block).to eq(query)
+      end.and_return(28)
+
+      expect(relation.min(:age)).to eql(28)
+    end
+  end
+
+  describe '#max' do
+    it 'calculates the maximum value' do
+      expect(adapter).to receive(:max).with(User, :age) do |&block|
+        expect(block).to eq(query)
+      end.and_return(35)
+
+      expect(relation.max(:age)).to eq(35)
+    end
+  end
+
+  describe '#minmax' do
+    it 'calculates the minimum and maximum values' do
+      expect(adapter).to receive(:min).with(User, :age) do |&block|
+        expect(block).to eq(query)
+      end.and_return(28)
+
+      expect(adapter).to receive(:max).with(User, :age) do |&block|
+        expect(block).to eq(query)
+      end.and_return(35)
+
+      expect(relation.minmax(:age)).to eq([28, 35])
+    end
+  end
+
   describe '#drop' do
     it 'offsets by the number of objects' do
       expect(adapter).to receive(:where).with(User, hash_including(offset: 10)).and_return([user])

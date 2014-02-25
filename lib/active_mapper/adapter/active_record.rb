@@ -30,6 +30,14 @@ module ActiveMapper
         where(klass, &block).count
       end
 
+      def min(klass, attribute, &block)
+        where(klass, &block).minimum(attribute)
+      end
+
+      def max(klass, attribute, &block)
+        where(klass, &block).maximum(attribute)
+      end
+
       def insert(klass, object)
         active_record = collection(klass)
         attributes = serialize(klass, object)
