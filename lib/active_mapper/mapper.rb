@@ -103,9 +103,5 @@ module ActiveMapper
       adapter.delete_all(mapped_class)
     end
     alias :delete_all :clear
-
-    def ==(other)
-      other.mapped_class == mapped_class
-    end
   end
 end

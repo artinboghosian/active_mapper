@@ -60,8 +60,7 @@ module ActiveMapper
       end
 
       def serialize(klass, object)
-        attributes = collection(klass).column_names.dup
-        attributes.inject({}) do |memo, attribute|
+        collection(klass).column_names.dup.inject({}) do |memo, attribute|
           memo[attribute] = object.send(attribute)
           memo
         end

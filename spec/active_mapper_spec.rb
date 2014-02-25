@@ -4,9 +4,12 @@ describe ActiveMapper do
   let(:adapter) { double('Adapter') }
 
   describe '.generate' do
-    let(:mapper) { ActiveMapper.generate(User) }
-
-    before { ActiveMapper.adapter = adapter }
+    let(:mapper) { ActiveMapper[User] }
+    
+    before do
+      ActiveMapper.adapter = adapter
+      ActiveMapper.generate(User)
+    end
 
     it 'generates a mapper for the specified class' do
       expect(mapper.mapped_class).to eq(User)
