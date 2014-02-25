@@ -7,6 +7,10 @@ module ActiveMapper
       @adapter = adapter
     end
 
+    def all?(&block)
+      count == count(&block)
+    end
+
     def any?(&block)
       select(&block).any?
     end
@@ -23,19 +27,18 @@ module ActiveMapper
       select(&block).count
     end
 
-    def find(&block)
-      select(&block).first
+    def find(id = nil, &block)
+      id ? first { |object| object.id == id } : first(&block)
     end
-    alias :detect :find
-    alias :first :find
 
     def find_all(&block)
-      select(&block).to_a
+      select(&block)
     end
 
-    def find_by_id(id)
-      find { |object| object.id == id }
+    def first(&block)
+      select(&block).first
     end
+    alias :detect :first
 
     def last(&block)
       select(&block).last
@@ -69,14 +72,14 @@ module ActiveMapper
       adapter.delete_all(mapped_class, &block)
     end
 
+    def keep_if(&block)
+      delete_if { |object| !block.call(object) }
+    end
+
     def clear
       adapter.delete_all(mapped_class)
     end
     alias :delete_all :clear
-
-    def keep_if(&block)
-      delete_if { |object| !block.call(object) }
-    end
 
     def ==(other)
       other.mapped_class == mapped_class

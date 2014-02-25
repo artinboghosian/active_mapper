@@ -8,20 +8,6 @@ describe ActiveMapper::Relation do
 
   before { adapter.stub(unserialize: user) }
 
-  describe '#all?' do
-    before { expect(adapter).to receive(:count).and_return(10) }
-
-    it 'is true when all objects match' do
-      expect(relation).to receive(:count).and_return(10)
-      expect(relation.all?).to be_true
-    end
-
-    it 'is false when not all objects match' do
-      expect(relation).to receive(:count).and_return(9)
-      expect(relation.all?).to be_false
-    end
-  end
-
   describe '#any?' do
     it 'is true when there are matching objects' do
       expect(adapter).to receive(:count).with(User).and_return(1)

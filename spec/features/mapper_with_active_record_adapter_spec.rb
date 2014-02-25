@@ -16,7 +16,7 @@ describe 'ActiveMapper with ActiveRecord adapter' do
     user.age = 18
     mapper.save(user)
 
-    record = mapper.find_by_id(user.id)
+    record = mapper.find(user.id)
 
     expect(record.name).to eq('Changed')
     expect(record.age).to eq(18)
@@ -26,7 +26,7 @@ describe 'ActiveMapper with ActiveRecord adapter' do
     mapper.save(user)
     mapper.delete(user)
 
-    expect(mapper.find_by_id(user.id)).to be_nil
+    expect(mapper.find(user.id)).to be_nil
 
     user.id = nil
 
@@ -43,8 +43,8 @@ describe 'ActiveMapper with ActiveRecord adapter' do
     mapper.save(other_user)
     mapper.delete_if { |user| user.age < 35 }
 
-    expect(mapper.find_by_id(other_user.id)).to eq(other_user)
-    expect(mapper.find_by_id(user.id)).to be_nil
+    expect(mapper.find(other_user.id)).to eq(other_user)
+    expect(mapper.find(user.id)).to be_nil
 
     user.id = nil
     other_user.id = nil
@@ -53,8 +53,8 @@ describe 'ActiveMapper with ActiveRecord adapter' do
     mapper.save(other_user)
     mapper.keep_if { |user| user.age < 35 }
 
-    expect(mapper.find_by_id(user.id)).to eq(user)
-    expect(mapper.find_by_id(other_user.id)).to be_nil
+    expect(mapper.find(user.id)).to eq(user)
+    expect(mapper.find(other_user.id)).to be_nil
   end
 
   it 'can retrieve the first, last and all records' do
@@ -64,7 +64,7 @@ describe 'ActiveMapper with ActiveRecord adapter' do
     expect(mapper.first).to eq(user)
     expect(mapper.last).to eq(other_user)
 
-    records = mapper.find_all
+    records = mapper.find_all.to_a
 
     expect(records).to include(user)
     expect(records).to include(other_user)

@@ -1,5 +1,11 @@
+require 'delegate'
+
 module ActiveMapper
   class Relation
+    extend Forwardable
+
+    def_delegators :to_a, :each, :map
+
     def initialize(mapped_class, adapter, &block)
       @mapped_class = mapped_class
       @adapter = adapter
@@ -9,10 +15,6 @@ module ActiveMapper
     def initialize_copy(other)
       super
       @to_a = nil
-    end
-
-    def all?
-      @adapter.count(@mapped_class) == count
     end
 
     def any?
@@ -78,14 +80,6 @@ module ActiveMapper
 
     def to_a
       @to_a||= @adapter.where(@mapped_class, options, &@block).map { |record| @adapter.unserialize(@mapped_class, record) }
-    end
-
-    def map(&block)
-      to_a.map(&block)
-    end
-
-    def each(&block)
-      to_a.each(&block)
     end
 
     private

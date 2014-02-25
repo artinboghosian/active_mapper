@@ -6,6 +6,10 @@ describe ActiveMapper::Mapper do
 
   before { adapter.stub(unserialize: user, where: [user]) }
 
+  describe '#all?' do
+    pending 'how to test'
+  end
+
   describe '#any?' do
     it 'is true when any objects match' do
       ActiveMapper::Relation.any_instance.should_receive(:count).and_return(1)
@@ -63,6 +67,12 @@ describe ActiveMapper::Mapper do
   end
 
   describe '#find' do
+    it 'finds the object with the matching id' do
+      ActiveMapper::Relation.any_instance.should_receive(:to_a).and_return([user])
+
+      expect(mapper.find(1)).to eq(user)
+    end
+
     it 'finds the first matching object' do
       ActiveMapper::Relation.any_instance.should_receive(:to_a).and_return([user])
 
@@ -74,15 +84,7 @@ describe ActiveMapper::Mapper do
     it 'finds all matching objects' do
       ActiveMapper::Relation.any_instance.should_receive(:to_a).and_return([user])
 
-      expect(mapper.find_all { |user| user.age > 18 }).to eq([user])
-    end
-  end
-
-  describe '#find_by_id' do
-    it 'finds the object with the matching id' do
-      ActiveMapper::Relation.any_instance.should_receive(:to_a).and_return([user])
-
-      expect(mapper.find_by_id(1)).to eq(user)
+      expect(mapper.find_all { |user| user.age > 18 }.to_a).to eq([user])
     end
   end
 
