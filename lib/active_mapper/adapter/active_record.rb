@@ -13,15 +13,18 @@ module ActiveMapper
       end
 
       def where(klass, options = {}, &block)
-        attribute, direction = options[:order]
+        order = (options[:order] || []).inject({}) do |memo, order|
+          memo[order.first] = order.last
+          memo
+        end
+
         active_record = collection(klass)
         query = Query.new(active_record.arel_table, &block)
 
         records = active_record.where(query.to_sql)
         records = records.limit(options[:limit]) if options[:limit]
         records = records.offset(options[:offset]) if options[:offset]
-        records = records.order(attribute) if attribute
-        records = records.reverse_order if direction == :desc
+        records = records.order(order)
 
         records
       end

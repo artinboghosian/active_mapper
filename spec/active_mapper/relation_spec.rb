@@ -154,7 +154,7 @@ describe ActiveMapper::Relation do
 
   describe '#sort' do
     it 'sets the attribute to order by' do
-      relation = create_relation.sort(:name).to_a
+      relation = create_relation.sort_by(&:name).to_a
 
       expect(relation.first).to eq(other_user)
       expect(relation.last).to eq(user)
@@ -163,7 +163,7 @@ describe ActiveMapper::Relation do
 
   describe '#reverse' do
     it 'sets the opposite direction to order by' do
-      relation = create_relation.sort(:age).reverse.to_a
+      relation = create_relation.sort_by(&:age).reverse.to_a
 
       expect(relation.first).to eq(other_user)
       expect(relation.last).to eq(user)

@@ -109,4 +109,26 @@ describe 'ActiveMapper with ActiveRecord adapter' do
     expect(mapper.avg(:age)).to eq(31.5)
     expect(mapper.sum(:age)).to eq(63)
   end
+
+  it 'can sort records' do
+    other_user.age = user.age
+
+    mapper.save(user)
+    mapper.save(other_user)
+
+    records = mapper.find_all.sort_by { |user| user.name }.to_a
+
+    expect(records.first).to eq(other_user)
+    expect(records.last).to eq(user)
+
+    records = mapper.find_all.sort_by { |user| [user.age, -user.name] }.to_a
+
+    expect(records.first).to eq(user)
+    expect(records.last).to eq(other_user)
+    
+    records = mapper.find_all.sort_by { |user| [user.age, -user.name] }.reverse.to_a
+
+    expect(records.first).to eq(other_user)
+    expect(records.last).to eq(user)
+  end
 end

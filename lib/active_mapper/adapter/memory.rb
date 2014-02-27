@@ -12,16 +12,33 @@ module ActiveMapper
       end
 
       def where(klass, options = {}, &block)
-        attribute, direction = options[:order] || [:id, :asc]
+        options[:order] ||= [[:id, :asc]]
         query = Query.new(&block)
 
-        records = collection(klass).values.select(&query.to_proc)
-        records = if direction == :desc
-          records.sort { |x,y| [y.send(attribute), x.id] <=> [x.send(attribute), x.id] }
-        else
-          records.sort { |x,y| [x.send(attribute), x.id] <=> [y.send(attribute), x.id] }
+        # proc do |x,y|
+        #   [x.name, y.age] <=> [y.name, x.age]
+        # end
+        order = proc do |x,y|
+          left = []
+          right = []
+
+          options[:order].each do |data|
+            attribute, direction = data
+
+            if direction == :desc
+              left << y.send(attribute)
+              right << x.send(attribute)
+            else
+              left << x.send(attribute)
+              right << y.send(attribute)
+            end
+          end
+
+          left <=> right
         end
 
+        records = collection(klass).values.select(&query.to_proc)
+        records = records.sort(&order)
         records = records.drop(options[:offset]) if options[:offset]
         records = records.take(options[:limit]) if options[:limit]
 
@@ -33,11 +50,11 @@ module ActiveMapper
       end
 
       def minimum(klass, attribute, &block)
-        where(klass, order: [attribute, :asc], &block).first.send(attribute)
+        where(klass, order: [[attribute, :asc]], &block).first.send(attribute)
       end
 
       def maximum(klass, attribute, &block)
-        where(klass, order: [attribute, :desc], &block).first.send(attribute)
+        where(klass, order: [[attribute, :desc]], &block).first.send(attribute)
       end
 
       def average(klass, attribute, &block)
