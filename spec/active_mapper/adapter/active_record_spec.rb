@@ -31,14 +31,14 @@ describe ActiveMapper::Adapter::ActiveRecord do
     end
 
     it 'finds and sorts the matching records in ascending order' do
-      records = adapter.where(User, order: [[:name, :asc]])
+      records = adapter.where(User, order: proc { |object| object.name })
 
       expect(records.first.id).to eq(other_user.id)
       expect(records.last.id).to eq(user.id)
     end
 
     it 'finds and sorts the matching records in descending order' do
-      records = adapter.where(User, order: [[:age, :desc]])
+      records = adapter.where(User, order: proc { |object| -object.age })
 
       expect(records.first.id).to eq(other_user.id)
       expect(records.last.id).to eq(user.id)

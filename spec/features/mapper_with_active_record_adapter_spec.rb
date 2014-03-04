@@ -115,7 +115,7 @@ describe 'ActiveMapper with ActiveRecord adapter' do
 
     mapper.save(user)
     mapper.save(other_user)
-
+    
     records = mapper.find_all.sort_by { |user| user.name }.to_a
 
     expect(records.first).to eq(other_user)
@@ -125,7 +125,7 @@ describe 'ActiveMapper with ActiveRecord adapter' do
 
     expect(records.first).to eq(user)
     expect(records.last).to eq(other_user)
-    
+
     records = mapper.find_all.sort_by { |user| [user.age, -user.name] }.reverse.to_a
 
     expect(records.first).to eq(other_user)

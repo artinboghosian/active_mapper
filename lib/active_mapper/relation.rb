@@ -1,5 +1,4 @@
 require 'delegate'
-require 'active_mapper/relation/sort'
 
 module ActiveMapper
   class Relation
@@ -11,7 +10,6 @@ module ActiveMapper
       @mapped_class = mapped_class
       @adapter = adapter
       @block = block
-      @sort = Sort.new
     end
 
     def initialize_copy(other)
@@ -92,13 +90,16 @@ module ActiveMapper
     end
 
     def sort_by(&block)
-      @sort.call(&block)
+      @order = block
       dup
     end
-    alias :sort :sort_by
 
     def reverse
-      @sort.reverse
+      @order ||= proc { |object| object.id }
+      @dup = @order.dup
+
+      sort_by { |object| [@dup.call(object)].flatten.map(&:-@) }
+
       dup
     end
 
@@ -109,7 +110,7 @@ module ActiveMapper
     private
 
     def options
-      { offset: @offset, limit: @limit, order: @sort.to_a }
+      { offset: @offset, limit: @limit, order: @order }
     end
   end
 end

@@ -1,6 +1,5 @@
 require 'spec_helper'
 describe ActiveMapper::Mapper do
-  #let(:adapter) { double('Adapter') }
   let(:adapter) { ActiveMapper::Adapter::Memory.new }
   let(:mapper) { ActiveMapper::Mapper.new(User, adapter) }
   let(:user) { User.new(name: 'user', age: 28) }

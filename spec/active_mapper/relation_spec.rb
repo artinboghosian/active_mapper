@@ -152,8 +152,8 @@ describe ActiveMapper::Relation do
     end
   end
 
-  describe '#sort' do
-    it 'sets the attribute to order by' do
+  describe '#sort_by' do
+    it 'sorts the objects by attribute' do
       relation = create_relation.sort_by(&:name).to_a
 
       expect(relation.first).to eq(other_user)

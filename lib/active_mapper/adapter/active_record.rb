@@ -1,5 +1,6 @@
 require 'active_record'
 require 'active_mapper/adapter/active_record/query'
+require 'active_mapper/adapter/active_record/order'
 
 module ActiveMapper
   module Adapter
@@ -13,18 +14,14 @@ module ActiveMapper
       end
 
       def where(klass, options = {}, &block)
-        order = (options[:order] || []).inject({}) do |memo, order|
-          memo[order.first] = order.last
-          memo
-        end
-
         active_record = collection(klass)
         query = Query.new(active_record.arel_table, &block)
+        order = Order.new(&options[:order])
 
         records = active_record.where(query.to_sql)
         records = records.limit(options[:limit]) if options[:limit]
         records = records.offset(options[:offset]) if options[:offset]
-        records = records.order(order)
+        records = records.order(order.to_sql)
 
         records
       end

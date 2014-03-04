@@ -38,7 +38,6 @@ describe 'ActiveMapper with Memory adapter' do
 
     mapper.save(user)
     mapper.save(other_user)
-
     records = mapper.find_all.sort_by { |user| user.name }.to_a
 
     expect(records.first).to eq(other_user)
