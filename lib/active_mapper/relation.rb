@@ -90,13 +90,13 @@ module ActiveMapper
     end
 
     def sort_by(&block)
-      @order = proc { |object| [block.call(object)].flatten }
+      @order = proc { |object| Array(block.call(object)) }
       dup
     end
 
     def reverse
-      if order = @order && @order.dup
-        sort_by { |object| order.call(object).map(&:-@) }
+      if @order && block = @order.dup
+        sort_by { |object| block.call(object).map(&:-@) }
       else
         sort_by { |object| -object.id }
       end
