@@ -10,7 +10,7 @@ module ActiveMapper
 
         def to_proc
           proc do |x,y|
-            attributes.sum do |attribute|
+            [attributes].flatten.sum do |attribute|
               attribute.to_proc.call(x,y)
             end
           end
