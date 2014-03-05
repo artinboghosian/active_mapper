@@ -1,3 +1,5 @@
+require 'active_mapper/adapter/active_record/order/attribute'
+
 module ActiveMapper
   module Adapter
     class ActiveRecord
@@ -20,29 +22,7 @@ module ActiveMapper
         private
 
         def attributes
-          @block ? [@block.call(self)].flatten : []
-        end
-
-        class Attribute
-          def initialize(name)
-            @name = name
-            @direction = :asc
-          end
-
-          def -@
-            @direction = asc? ? :desc : :asc
-            self
-          end
-
-          def to_sql
-            { @name => @direction }
-          end
-
-          private
-
-          def asc?
-            @direction == :asc
-          end
+          @block ? @block.call(self) : []
         end
       end
     end

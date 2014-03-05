@@ -1,3 +1,5 @@
+require 'active_mapper/adapter/memory/order/attribute'
+
 module ActiveMapper
   module Adapter
     class Memory
@@ -21,35 +23,7 @@ module ActiveMapper
         private
 
         def attributes
-          @block ? [@block.call(self)].flatten : [Attribute.new(:id)]
-        end
-
-        class Attribute
-          def initialize(name)
-            @name = name
-            @direction = :asc
-          end
-
-          def -@
-            @direction = asc? ? :desc : :asc
-            self
-          end
-
-          def to_proc
-            proc do |x,y|
-              if asc?
-                x.send(@name) <=> y.send(@name)
-              else
-                y.send(@name) <=> x.send(@name)
-              end
-            end
-          end
-
-          private
-
-          def asc?
-            @direction == :asc
-          end
+          @block ? @block.call(self) : [id]
         end
       end
     end

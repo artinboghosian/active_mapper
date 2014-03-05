@@ -29,11 +29,11 @@ module ActiveMapper
       end
 
       def minimum(klass, attribute, &block)
-        where(klass, order: proc { |object| object.send(attribute) }, &block).first.send(attribute)
+        where(klass, order: proc { |object| [object.send(attribute)] }, &block).first.send(attribute)
       end
 
       def maximum(klass, attribute, &block)
-        where(klass, order: proc { |object| -object.send(attribute) }, &block).first.send(attribute)
+        where(klass, order: proc { |object| [-object.send(attribute)] }, &block).first.send(attribute)
       end
 
       def average(klass, attribute, &block)
