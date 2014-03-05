@@ -105,7 +105,7 @@ module ActiveMapper
     end
 
     def to_a
-      @to_a||= @adapter.where(@mapped_class, options, &@block).map { |record| @adapter.unserialize(@mapped_class, record) }
+      @to_a ||= @adapter.where(@mapped_class, options, &@block).map { |record| @adapter.unserialize(@mapped_class, record) }
     end
 
     private
