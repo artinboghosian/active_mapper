@@ -1,30 +1,15 @@
 require 'spec_helper'
 
 describe ActiveMapper do
-  let(:adapter) { double('Adapter') }
-
-  describe '.generate' do
-    let(:mapper) { ActiveMapper[User] }
-    
-    before do
-      ActiveMapper.adapter = adapter
-      ActiveMapper.generate(User)
-    end
-
-    it 'generates a mapper for the specified class' do
-      expect(mapper.mapped_class).to eq(User)
-    end
-
-    it 'sets the adapter on the generated mapper' do
-      expect(mapper.adapter).to eq(adapter)
-    end
-
-    it 'stores the generated mapper' do
-      expect(ActiveMapper[User]).to eq(mapper)
+  describe '.[]' do
+    it 'returns the stored mapper' do
+      expect(ActiveMapper[User].mapped_class).to eql(User)
     end
   end
 
   describe '.adapter' do
+    let(:adapter) { double('Adapter') }
+
     it 'returns the adapter that has been set' do
       ActiveMapper.adapter = adapter
 

@@ -28,8 +28,6 @@ Or install it yourself as:
         end
     end
     
-    ActiveMapper.generate(Post)
-    
     post = Post.new(title: 'Post', content: 'My First Post')
     ActiveMapper[Post].save(post)
     
@@ -42,7 +40,7 @@ Or install it yourself as:
     mapper.last { |post| (post.status == 'published') & (post.created_at > 5.days.ago) }
     mapper.all { |post| (post.content.contains('monkey')) & (post.status == 'published) }
 
-Simply create a plain old ruby model (e.g. Post) that includes ActiveModel::Model. Add attr_accessor (must have :id). Then register an adapter using ActiveMapper.generate(Post). Make sure to set the adapter you want to use (default is ActiveMapper::Adapter::Memory). Set the adapter by calling ActiveMapper.adapter = ActiveMapper::Adapter::ActiveRecord.new. Then access the mapper using ActiveMapper[Post]. Please contribute to the project by forking it if you feel this project has any value or you are just interested in it.
+Simply create a plain old ruby model (e.g. Post) that includes ActiveModel::Model. Add attr_accessor (must have :id). Make sure to set the adapter you want to use (default is ActiveMapper::Adapter::Memory). Set the adapter by calling ActiveMapper.adapter = ActiveMapper::Adapter::ActiveRecord.new. Then access the mapper using ActiveMapper[Post]. Please contribute to the project by forking it if you feel this project has any value or you are just interested in it.
 
 ## Contributing
 
