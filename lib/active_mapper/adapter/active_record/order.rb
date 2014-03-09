@@ -9,7 +9,7 @@ module ActiveMapper
         end
 
         def to_sql
-          attributes.inject({}) do |memo, attribute|
+          [attributes].flatten.inject({}) do |memo, attribute|
             memo = memo.merge(attribute.to_sql)
             memo
           end

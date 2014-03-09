@@ -4,12 +4,8 @@ require 'active_mapper/adapter'
 require 'active_mapper/version'
 
 module ActiveMapper
-  def self.generate(klass)
-    mappers[klass] = Class.new(ActiveMapper::Mapper).new(klass, adapter)
-  end
-
   def self.[](klass)
-    mappers[klass]
+    mappers[klass] ||= Class.new(ActiveMapper::Mapper).new(klass, adapter)
   end
 
   def self.adapter

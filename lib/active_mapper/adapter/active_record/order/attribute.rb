@@ -9,6 +9,11 @@ module ActiveMapper
           end
 
           def -@
+            @direction = :desc
+            self
+          end
+
+          def reverse
             @direction = asc? ? :desc : :asc
             self
           end
