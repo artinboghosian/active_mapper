@@ -108,6 +108,24 @@ describe ActiveMapper::Relation do
     end
   end
 
+  describe '#select' do
+    it 'returns matching objects' do
+      relation = create_relation { |user| user.name == 'user' }.select { |user| user.age == 28 }.to_a
+
+      expect(relation).to include(user)
+      expect(relation).to_not include(other_user)
+    end
+  end
+
+  describe '#reject' do
+    it 'returns non matching objects' do
+      relation = create_relation { |user| user.age > 18 }.reject { |user| user.name == 'user' }.to_a
+
+      expect(relation).to include(other_user)
+      expect(relation).to_not include(user)
+    end
+  end
+
   describe '#first' do
     it 'returns the first matching object' do
       expect(create_relation.first).to eq(user)

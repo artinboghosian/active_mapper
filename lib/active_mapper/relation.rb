@@ -69,6 +69,20 @@ module ActiveMapper
       dup
     end
 
+    def select(&block)
+      if @block && query = @block.dup
+        @block = proc { |object| (query.call(object)) & block.call(object) }
+      else
+        @block = block
+      end
+
+      dup
+    end
+
+    def reject(&block)
+      select { |object| !block.call(object) }
+    end
+
     def first(number = 1)
       objects = drop(0).take(number).to_a
 
