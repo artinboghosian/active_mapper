@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["artinboghosian@gmail.com"]
   spec.summary       = %q{Data mapper using ActiveRecord for data access}
   spec.description   = %q{Data mapper using ActiveRecord for data access}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/artinboghosian/active_mapper"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
