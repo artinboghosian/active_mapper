@@ -70,7 +70,9 @@ module ActiveMapper
     end
 
     def select(&block)
-      if @block && query = @block.dup
+      if @block
+        query = @block.dup
+        
         @block = proc { |object| (query.call(object)) & block.call(object) }
       else
         @block = block
