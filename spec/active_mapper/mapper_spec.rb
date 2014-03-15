@@ -99,6 +99,10 @@ describe ActiveMapper::Mapper do
       expect(mapper.find(user.id)).to eq(user)
     end
 
+    it 'finds no objects with a nil id' do
+      expect(mapper.find(nil)).to be_nil
+    end
+
     it 'finds the first matching object' do
       expect(mapper.find { |user| user.age > 21 }).to eq(user)
     end

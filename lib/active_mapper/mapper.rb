@@ -54,7 +54,11 @@ module ActiveMapper
     end
 
     def find(id = nil, &block)
-      id ? first { |object| object.id == id } : first(&block)
+      if block_given?
+        first(&block)
+      else
+        first { |object| object.id == id } if id
+      end
     end
 
     def first(&block)
