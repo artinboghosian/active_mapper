@@ -8,7 +8,7 @@ module ActiveMapper
       end
 
       def find(klass, id)
-        Relation.new(table(klass)).where { |object| object.id == id }.first
+        where(klass) { |record| record.id == id }.first
       end
 
       def where(klass, options = {}, &block)
@@ -41,7 +41,7 @@ module ActiveMapper
           updated_at: Time.now
         )
 
-        Relation.new(table(klass)).insert(attributes.except(:id))
+        where(klass).insert(attributes.except(:id))
       end
 
       def update(klass, object)
