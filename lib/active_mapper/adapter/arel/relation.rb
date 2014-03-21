@@ -1,3 +1,6 @@
+require 'active_mapper/adapter/arel/query'
+require 'active_mapper/adapter/arel/order'
+
 module ActiveMapper
   module Adapter
     class Arel
@@ -14,6 +17,10 @@ module ActiveMapper
 
         def all
           @all ||= execute(manager.to_sql)
+        end
+
+        def map(&block)
+          all.map(&block)
         end
 
         def first
@@ -42,6 +49,21 @@ module ActiveMapper
 
         def where(&block)
           manager.where(Query.new(table, block).call) if block_given?
+          self
+        end
+
+        def order(&block)
+          manager.order(Order.new(table, block).call) if block_given?
+          self
+        end
+
+        def offset(number)
+          manager.skip(number) if number
+          self
+        end
+
+        def limit(number)
+          manager.take(number) if number
           self
         end
 
@@ -86,78 +108,6 @@ module ActiveMapper
           manager.project(table[attribute].send(operator))
 
           execute(manager.to_sql).first[0]
-        end
-
-        class Query
-          def initialize(table, block)
-            @table = table
-            @block = block
-          end
-
-          def call
-            @block.call(self).call
-          end
-
-          def method_missing(name, *args, &block)
-            Attribute.new(@table[name])
-          end
-          class Attribute
-            def initialize(attribute)
-              @attribute = attribute
-            end
-
-            def ==(value)
-              Expression.new(@attribute.eq(value))
-            end
-
-            def >(value)
-              Expression.new(@attribute.gt(value))
-            end
-
-            def <(value)
-              Expression.new(@attribute.lt(value))
-            end
-          end
-
-          class Expression
-            def initialize(expression)
-              @expression = expression
-            end
-
-            def call
-              @expression
-            end
-
-            def !
-              NotExpression.new(self)
-            end
-
-            def &(expression)
-              AndExpression.new(self, expression)
-            end
-
-            def |(expression)
-              OrExpression.new(self, expression)
-            end
-          end
-
-          class NotExpression < Expression
-            def call
-              super.not
-            end
-          end
-
-          class AndExpression < Expression
-            def initialize(left, right)
-              super(left.call.and(right.call))
-            end
-          end
-
-          class OrExpression < Expression
-            def initialize(left, right)
-              super(left.call.or(right.call))
-            end
-          end
         end
       end
     end

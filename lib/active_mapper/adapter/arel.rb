@@ -12,7 +12,7 @@ module ActiveMapper
       end
 
       def where(klass, options = {}, &block)
-        Relation.new(table(klass)).where(&block)
+        Relation.new(table(klass)).where(&block).order(&options[:order]).offset(options[:offset]).limit(options[:limit])
       end
 
       def count(klass, &block)

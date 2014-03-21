@@ -31,21 +31,21 @@ describe ActiveMapper::Adapter::Arel do
     end
 
     it 'finds and sorts the matching records in ascending order' do
-      records = adapter.where(User, order: proc { |object| [object.name] })
+      records = adapter.where(User, order: proc { |object| [object.name] }).all
 
       expect(records.first['id']).to eq(other_user.id)
       expect(records.last['id']).to eq(user.id)
     end
 
     it 'finds and sorts the matching records in descending order' do
-      records = adapter.where(User, order: proc { |object| [-object.age] })
+      records = adapter.where(User, order: proc { |object| [-object.age] }).all
 
       expect(records.first['id']).to eq(other_user.id)
       expect(records.last['id']).to eq(user.id)
     end
 
     it 'limits the number of matching records' do
-      records = adapter.where(User, limit: 1)
+      records = adapter.where(User, limit: 1).all
 
       expect(records.count).to eq(1)
     end
