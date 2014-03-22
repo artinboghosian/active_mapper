@@ -5,7 +5,7 @@ describe ActiveMapper::Adapter::Arel do
   let(:other_user) { User.new(name: 'other', age: 35) }
   let(:adapter) { ActiveMapper::Adapter::Arel.new }
 
-  setup_active_record('active_record')
+  setup_database('arel')
 
   before do
     user.id = adapter.insert(User, user)

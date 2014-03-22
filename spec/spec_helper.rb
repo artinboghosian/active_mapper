@@ -16,7 +16,7 @@ class CreateUsers < ActiveRecord::Migration
   end
 end
 
-def setup_active_record(name)
+def setup_database(name)
   db = "./spec/support/db/#{name}.sqlite3"
 
   before(:all) do
