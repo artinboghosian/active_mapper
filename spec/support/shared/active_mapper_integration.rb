@@ -17,6 +17,13 @@ shared_examples_for 'ActiveMapper Integration' do |adapter|
     expect(record.age).to eq(18)
   end
 
+  it 'can create multiple records' do
+    mapper.save([user, other_user])
+
+    expect(mapper.find(user.id)).to eq(user)
+    expect(mapper.find(other_user.id)).to eq(other_user)
+  end
+
   it 'can delete records' do
     mapper.save(user)
     mapper.delete(user)

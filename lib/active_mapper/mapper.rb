@@ -80,15 +80,19 @@ module ActiveMapper
     end
 
     def save(object)
-      return false unless object.valid?
-
-      if object.id
-        adapter.update(mapped_class, object)
+      if object.is_a?(Array)
+        object.map { |o| save(o) } if object.all? { |o| o.valid? }
       else
-        object.id = adapter.insert(mapped_class, object)
-      end
+        return false unless object.valid?
 
-      object
+        if object.id
+          adapter.update(mapped_class, object)
+        else
+          object.id = adapter.insert(mapped_class, object)
+        end
+
+        object
+      end
     end
 
     def delete(object)

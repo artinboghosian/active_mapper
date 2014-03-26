@@ -71,7 +71,7 @@ module ActiveMapper
           values = extract_values(attributes)
           im = table.compile_insert(values)
 
-          table.engine.connection.insert(im.to_sql)
+          benchmark(im.to_sql) { table.engine.connection.insert(im.to_sql) }
         end
 
         def update(attributes)
@@ -91,16 +91,15 @@ module ActiveMapper
           attributes.map { |name, value| [table[name], value] }
         end
 
-        def execute(sql)
+        def benchmark(sql, &block)
           result = nil
-
-          milliseconds = Benchmark.ms do
-            result = table.engine.connection.execute(sql)
-          end
-
-          puts "SQL (#{milliseconds.round(2)}ms) - #{sql}"
-
+          time = Benchmark.ms { result = block.call }
+          puts "SQL (#{time.round(2)}ms) - #{sql}"
           result
+        end
+
+        def execute(sql)
+          benchmark(sql) { table.engine.connection.execute(sql) }
         end
 
         def calculate(operator, attribute)

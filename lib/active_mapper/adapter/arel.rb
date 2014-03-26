@@ -36,19 +36,17 @@ module ActiveMapper
       end
 
       def insert(klass, object)
-        attributes = serialize(klass, object).reverse_merge(
-          created_at: Time.now,
-          updated_at: Time.now
-        )
+        object.created_at = Time.now
+        object.updated_at = Time.now
 
-        where(klass).insert(attributes.except(:id))
+        where(klass).insert(serialize(klass, object).except(:id))
       end
 
       def update(klass, object)
+        object.updated_at = Time.now
         relation = where(klass) { |record| record.id == object.id }
-        attributes = serialize(klass, object).merge(updated_at: Time.now)
 
-        relation.update(attributes.except(:id))
+        relation.update(serialize(klass, object).except(:id))
       end
 
       def delete(klass, object)
